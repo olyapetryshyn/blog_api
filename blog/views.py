@@ -1,8 +1,10 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.db.models import Q
 from django.utils.decorators import method_decorator
 from django.shortcuts import get_object_or_404, get_list_or_404
 from rest_framework import generics, status, request
+from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.permissions import (
     AllowAny,
     IsAuthenticated,
@@ -40,9 +42,23 @@ class PostCreateList(generics.ListCreateAPIView):
     queryset = Post.objects.all().order_by('-date_posted')
     serializer_class = PostCreateListSerializer
     permission_classes = (IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly)
+    filter_backends = [SearchFilter, OrderingFilter]
+    search_fields = ['title', 'content', 'user__first_name']
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
+
+    def get_queryset(self, *args, **kwargs):
+        queryset_list = Post.objects.filter(user=self.request.user)
+        query = request.GET.get('q')
+        if query:
+            queryset_list = queryset_list.filter(
+                Q(title__icontains=query) |
+                Q(content__icontains=query) |
+                Q(user__first_name__icontains=query) |
+                Q(user__last_name__icontains=query)
+            ).distinct()
+        return queryset_list
 
     # def get_queryset(self):
     #     user = self.request.user
