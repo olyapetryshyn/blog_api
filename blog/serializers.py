@@ -23,7 +23,3 @@ class PostCreateListSerializer(serializers.ModelSerializer):
         model = Post
         fields = ['id', 'title', 'content', 'date_posted', 'user']
         read_only_fields = ['id', 'date_posted', 'user']
-
-    def validate(self, attrs):
-        attrs['user'] = self.context['request'].user
-        return attrs
