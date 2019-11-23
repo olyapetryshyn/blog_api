@@ -49,8 +49,8 @@ class PostCreateList(generics.ListCreateAPIView):
         serializer.save(user=self.request.user)
 
     def get_queryset(self, *args, **kwargs):
-        queryset_list = Post.objects.filter(user=self.request.user)
-        query = request.GET.get('q')
+        queryset_list = Post.objects.filter(user=self.request.user).order_by('-date_posted')
+        query = self.request.GET.get('q')
         if query:
             queryset_list = queryset_list.filter(
                 Q(title__icontains=query) |
