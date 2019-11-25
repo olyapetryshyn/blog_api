@@ -6,7 +6,6 @@ from django.shortcuts import get_object_or_404, get_list_or_404
 from rest_framework import generics, status, request
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.permissions import (
-    AllowAny,
     IsAuthenticated,
     IsAdminUser,
     IsAuthenticatedOrReadOnly
@@ -19,6 +18,7 @@ from .serializers import (
     PostCreateListSerializer
 )
 from .permissions import IsOwnerOrReadOnly
+from .pagination import PostPageNumberPagination
 
 
 class UserList(generics.ListAPIView):
@@ -44,6 +44,7 @@ class PostCreateList(generics.ListCreateAPIView):
     permission_classes = (IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly)
     filter_backends = [SearchFilter, OrderingFilter]
     search_fields = ['title', 'content', 'user__first_name']
+    pagination_class = PostPageNumberPagination
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
@@ -59,8 +60,3 @@ class PostCreateList(generics.ListCreateAPIView):
                 Q(user__last_name__icontains=query)
             ).distinct()
         return queryset_list
-
-    # def get_queryset(self):
-    #     user = self.request.user
-    #     if user.is_authenticated:
-    #         return self.queryset.filter(user=user)
