@@ -1,15 +1,15 @@
 from django.contrib.auth.models import User
-from rest_framework import serializers
+from rest_framework.serializers import ModelSerializer, HyperlinkedIdentityField
 from .models import Post
 
 
-class UserSerializer(serializers.ModelSerializer):
+class UserSerializer(ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'username', 'email']
 
 
-class PostDetailSerializer(serializers.ModelSerializer):
+class PostDetailSerializer(ModelSerializer):
     user = UserSerializer(read_only=True)
 
     class Meta:
@@ -18,8 +18,10 @@ class PostDetailSerializer(serializers.ModelSerializer):
         read_only_fields = ['user']
 
 
-class PostCreateListSerializer(serializers.ModelSerializer):
+class PostCreateListSerializer(ModelSerializer):
+    url = HyperlinkedIdentityField(view_name='post-detail')
+
     class Meta:
         model = Post
-        fields = ['id', 'title', 'content', 'date_posted', 'user']
+        fields = ['url', 'id', 'title', 'content', 'date_posted', 'user']
         read_only_fields = ['id', 'date_posted', 'user']

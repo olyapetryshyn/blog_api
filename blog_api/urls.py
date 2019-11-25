@@ -21,7 +21,7 @@ from . import settings
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('blog.urls')),
-    url(r'^api-auth/', include('rest_framework.urls'))
+    url(r'^api-auth/', include('rest_framework.urls', namespace='blog'))
 ]
 
 if settings.DEBUG:
