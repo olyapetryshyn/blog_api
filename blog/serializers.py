@@ -1,5 +1,9 @@
 from django.contrib.auth.models import User
-from rest_framework.serializers import ModelSerializer, HyperlinkedIdentityField
+from rest_framework.serializers import (
+    HyperlinkedIdentityField,
+    ModelSerializer,
+    SerializerMethodField
+)
 from .models import Post
 
 
@@ -10,12 +14,16 @@ class UserSerializer(ModelSerializer):
 
 
 class PostDetailSerializer(ModelSerializer):
-    user = UserSerializer(read_only=True)
+    user = SerializerMethodField()
 
     class Meta:
         model = Post
         fields = '__all__'
         read_only_fields = ['user']
+
+    @staticmethod
+    def get_user(obj):
+        return str(obj.user.username)
 
 
 class PostCreateListSerializer(ModelSerializer):
