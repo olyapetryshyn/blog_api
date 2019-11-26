@@ -5,6 +5,8 @@ from rest_framework.serializers import (
     SerializerMethodField
 )
 from .models import Post
+from comments.serializers import CommentListSerializer
+from comments.models import Comment
 
 
 class UserSerializer(ModelSerializer):
@@ -15,6 +17,7 @@ class UserSerializer(ModelSerializer):
 
 class PostDetailSerializer(ModelSerializer):
     user = SerializerMethodField()
+    comments = SerializerMethodField()
 
     class Meta:
         model = Post
@@ -24,6 +27,14 @@ class PostDetailSerializer(ModelSerializer):
     @staticmethod
     def get_user(obj):
         return str(obj.user.username)
+
+    @staticmethod
+    def get_comments(obj):
+        content_type = obj.get_content_type
+        object_id = obj.id
+        c_qs = Comment.objects.filter_by_instance(obj)
+        comments = CommentListSerializer(c_qs, many=True).data
+        return comments
 
 
 class PostCreateListSerializer(ModelSerializer):
