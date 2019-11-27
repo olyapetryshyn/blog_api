@@ -163,12 +163,6 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 10
 }
 
-CELERY_BROKER_URL = 'redis://h:p161ee1bc64cb1b54a55c930fa44e1ba3d9664c56683206107db927b83cf2a14d@ec2-52-212-222-169' \
-                    '.eu-west-1.compute.amazonaws.com:29279 '
-
-CELERY_ACCEPT_CONTENT = ['json']
-CELERY_TASK_SERIALIZER = 'json'
-
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_HOST_USER = os.environ.get('EMAIL_USER')

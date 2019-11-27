@@ -7,5 +7,5 @@ from .tasks import send_email
 
 class SendEmail(APIView):
     def get(self, request):
-        send_email()
+        send_email.apply_async(queue='mailing')
         return HttpResponse(json.dumps({'msg': 'E-mail has been sent.'}), status=status.HTTP_200_OK)

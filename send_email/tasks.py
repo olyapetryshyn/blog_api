@@ -1,9 +1,8 @@
 from django.core.mail import send_mail
-from celery import shared_task
+from blog_api.celery import app
 
 
-@shared_task
+@app.task
 def send_email():
-    send_mail('Personal blog.', 'This proofs that the task worked!',
-              'olya.petryshyn@gmail.com', ['davacic818@exserver.top'])
-    return None
+    send_mail(subject='Personal blog.', message='Hello from the crew at Personal blog.!',
+              from_email='olya.petryshyn@gmail.com', recipient_list=['olha.petryshyn@vakoms.com'])
