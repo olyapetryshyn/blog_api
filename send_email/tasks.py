@@ -1,6 +1,8 @@
 from django.core.mail import send_mail
 from blog_api.celery import app
 
+app.conf.enable_utc = False
+
 
 @app.task
 def send_email():
