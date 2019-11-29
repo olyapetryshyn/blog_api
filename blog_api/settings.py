@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
+import pytz
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -40,7 +41,8 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'rest_framework',
     'blog',
-    'comments'
+    'comments',
+    'send_email'
 ]
 
 MIDDLEWARE = [
